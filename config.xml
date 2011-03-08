@@ -108,4 +108,7 @@
 	<string name="google_youtube_result_re">
 		&lt;a href=&quot;(http://www.youtube.com/watch\?v=[\w\d]+)&quot; class=l&gt;(.*?)(?=&lt;/a&gt;)
 	</string>
+	<string name="screenshot_num">
+		4
+	</string>
 </pythonbits>

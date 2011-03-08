@@ -3,7 +3,7 @@
 #       Copyright (c) 2010, scootypuffjr
 #       Copyright (c) 2010, Apollo
 #       All rights reserved.
-#       
+#
 #       Redistribution and use in source and binary forms, with or without
 #       modification, are permitted provided that the following conditions are met:
 #               * Redistributions of source code must retain the above copyright
@@ -14,7 +14,7 @@
 #               * Neither the name of the organization nor the
 #                 names of its contributors may be used to endorse or promote products
 #                 derived from this software without specific prior written permission.
-#       
+#
 #       THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 #       ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 #       WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -63,51 +63,51 @@ if __htmlparser:
 def tempdir():
     return tempfile.gettempdir()+os.sep
 
-def decode(text):  
-	
+def decode(text):
+
 	"""Takes a string and replaces any html entities it contains with their unicode
 	counterparts.
 	"""
-	
+
 	if __htmlparser:
 	## HACK, HTMLParser() sucks @ utf-8
 		return __converter.unescape(text.decode('utf-8')).encode('utf-8')
 	else:
-		charrefpat = re.compile(r'&(#(\d+|x[\da-fA-F]+)|[\w.:-]+);?')  
-		from htmlentitydefs import name2codepoint  
-		if type(text) is unicode:  
-			uchr = unichr  
-		else:  
-			uchr = lambda value: value > 255 and unichr(value) or chr(value)  
-  
-		def entitydecode(match, uchr=uchr):      
-			entity = match.group(1)  
-			if entity.startswith('#x'):      
-				return uchr(int(entity[2:], 16))  
-			elif entity.startswith('#'):  
-				return uchr(int(entity[1:]))  
-			elif entity in name2codepoint:  
-				return uchr(name2codepoint[entity])      
-			else:  
-				return match.group(0)  
-		return charrefpat.sub(entitydecode, text)  
+		charrefpat = re.compile(r'&(#(\d+|x[\da-fA-F]+)|[\w.:-]+);?')
+		from htmlentitydefs import name2codepoint
+		if type(text) is unicode:
+			uchr = unichr
+		else:
+			uchr = lambda value: value > 255 and unichr(value) or chr(value)
+
+		def entitydecode(match, uchr=uchr):
+			entity = match.group(1)
+			if entity.startswith('#x'):
+				return uchr(int(entity[2:], 16))
+			elif entity.startswith('#'):
+				return uchr(int(entity[1:]))
+			elif entity in name2codepoint:
+				return uchr(name2codepoint[entity])
+			else:
+				return match.group(0)
+		return charrefpat.sub(entitydecode, text)
 
 class FetchError(Exception):
 	def __init__(self, value):
-		self.parameter = value          
-	def __str__(self):                              
+		self.parameter = value
+	def __str__(self):
 		return repr(self.parameter)
 
 class URLError(Exception):
 	def __init__(self, value):
-		self.parameter = value          
-	def __str__(self):                              
+		self.parameter = value
+	def __str__(self):
 		return repr(self.parameter)
 
 class Error404(Exception):
 	def __init__(self, value):
-		self.parameter = value          
-	def __str__(self):                              
+		self.parameter = value
+	def __str__(self):
 		return repr(self.parameter)
 
 class _MyOpener(urllib.FancyURLopener):
@@ -126,8 +126,8 @@ class pythonbits_config:
 				open(tempdir()+"config.xml", "w").write(nconf.read())
 			else:
 				__logerror("Cannot update config file.")
-			
-		
+
+
 	def __del__(self):
 		self.file.close()
 
@@ -197,7 +197,7 @@ class search(object):
 	def __unicode__(self):
 		return unicode(self.searchString)
 
-	def __repr__(self): 
+	def __repr__(self):
 		return repr(self.results)
 
 	def __getitem__(self, index):
@@ -219,7 +219,7 @@ class imdb(object):
 	"""
 
 	def __init__(self,url):
-		
+
 		self.url = url
 		self.data = {}
 		self.errors = False
@@ -251,7 +251,7 @@ class imdb(object):
 		self.wikiurl = ''
 		self.mediainfo = ''
 		self.trivia = ''
-		
+
 		if not re.match(conf.strings["imdb_url_re"] ,self.url):
 			raise URLError("Invalid URL")
 
@@ -287,11 +287,11 @@ class imdb(object):
 		self.data[key] = value
 
 	def overview(self, bbcode=False):
-		
+
 		"""Provides a short overview of the film or TV series. Optional argument turns on
 		BBCode formatting.
 		"""
-		
+
 		overview = ""
 		if bbcode:
 			format = ("[b]","[/b]")
@@ -325,7 +325,7 @@ class imdb(object):
 				overview += "\n%sCountries:%s " % format + " | ".join(self.country)
 			else:
 				overview += "\n%sCountry:%s " % format + " | ".join(self.country)
-		return overview 
+		return overview
 
 	def __parsePage(self, page):
 
@@ -340,7 +340,7 @@ class imdb(object):
 		if match:
 			self.tagline = decode(match[0])
 		self.__setitem__("tagline", self.tagline)
-		
+
 		# short description
 		match = re.findall(conf.strings["imdb_description_re"], page,re.MULTILINE)
 		if match:
@@ -391,7 +391,7 @@ class imdb(object):
 
 		# cast
 		#castsearch = re.compile(conf.strings["imdb_castsearch_re"], re.DOTALL)
-		#self.cast = re.findall( castsearch, page) 
+		#self.cast = re.findall( castsearch, page)
 		#x = 0
 		#for member in self.cast:
 		#	if not member[2]:
@@ -427,7 +427,7 @@ class imdb(object):
 		#		if i.strip():
 		#			self.alsoknownas.append(i.strip())
 		#self.__setitem__("alsoknownas", self.alsoknownas)
-			
+
 
 		# color
 		#match = re.findall(conf.strings["imdb_color_re"], page, re.MULTILINE)
@@ -535,14 +535,22 @@ class imdb(object):
 		return True
 
 class Imgur(object):
-	def __init__(self, path):
+	def __init__(self, path, shots = 2):
 		self.path = path
-		self.imageurl = ['', '']
+		self.imageurl = []
 		self.key = conf.strings["imgur_key"]
 		self.tries = 0
 		self.duration = ''
 		self.ffmpeg = ''
-		
+                if shots < 2:
+                        self.shots = 2
+                        sys.stderr.write('Number of screenshots increased to 2\n')
+                elif shots > 7:
+                        self.shots = 7
+                        sys.stderr.write('Number of screenshots limited to 7\n')
+                else:
+                        self.shots = shots
+
 	def getDuration(self):
 		try:
 			self.ffmpeg = subprocess.Popen([r"ffmpeg","-i",self.path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -551,29 +559,30 @@ class Imgur(object):
 			exit(1)
 		self.duration = re.findall(r'Duration:\D(\d{2}):(\d{2}):(\d{2})', self.ffmpeg.stdout.read())
 		self.duration = int(self.duration[0][0]) * 3600 + int(self.duration[0][1]) * 60 + int(self.duration[0][2])
-		
+
 	def upload(self):
 		self.getDuration()
+                # Take screenshots at even increments between 20% and 80% of the duration
+                stops = range(20,81,60/(self.shots-1))
 		try:
-			subprocess.Popen([r"ffmpeg","-ss",str((self.duration * 2)/10), "-vframes", "1", "-i", self.path , "-y", "-sameq", "-f", "image2", tempdir()+"screen1.png" ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT).wait()
-			subprocess.Popen([r"ffmpeg","-ss",str((self.duration * 8)/10), "-vframes", "1", "-i", self.path , "-y", "-sameq", "-f", "image2", tempdir()+"screen2.png" ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT).wait()
+                        count=0
+                        imgs = []
+                        for stop in stops:
+                                imgs.append(tempdir()+"screen%d.png" % count)
+    			        subprocess.Popen([r"ffmpeg","-ss",str((self.duration * stop)/100), "-vframes", "1", "-i", self.path , "-y", "-sameq", "-f", "image2", imgs[-1] ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT).wait()
+                                count+=1
 		except OSError:
 			sys.stderr.write("Error: Ffmpeg not installed, refer to http://www.ffmpeg.org/download.html for installation")
 			exit(1)
 		opener = urllib2.build_opener(MultipartPostHandler.MultipartPostHandler)
-		params1 = ({'key' : self.key.decode('utf-8').encode('utf-8'), 'image' : open(tempdir()+'screen1.png', "rb")})
-		params2 = ({'key' : self.key.decode('utf-8').encode('utf-8'), 'image' : open(tempdir()+'screen2.png', "rb")})
 		try:
-			socket = opener.open("http://api.imgur.com/2/upload.json", params1)
-			read = json.loads(socket.read())
-			self.imageurl[0] = read['upload']['links']['original']
-			socket.close()
-			socket = opener.open("http://api.imgur.com/2/upload.json", params2)
-			read = json.loads(socket.read())
-			self.imageurl[1] = read['upload']['links']['original']
-			socket.close()
-			os.remove(tempdir()+'screen1.png')
-			os.remove(tempdir()+'screen2.png')
+                        for img in imgs:
+		                params = ({'key' : self.key.decode('utf-8').encode('utf-8'), 'image' : open(img, "rb")})
+			        socket = opener.open("http://api.imgur.com/2/upload.json", params)
+			        read = json.loads(socket.read())
+			        self.imageurl.append(read['upload']['links']['original'])
+			        socket.close()
+			        os.remove(img)
 			return True
 		except urllib2.URLError as s:
 			if self.tries < 3:
@@ -583,7 +592,7 @@ class Imgur(object):
 				sys.stderr.write('\n')
 				self.upload()
 			return True
-	
+
 
 if __name__ == "__main__":
 	results = ''
@@ -606,7 +615,7 @@ if __name__ == "__main__":
 			if (newconf.info()["Status"]=="200 OK"):
 				open(tempdir()+"config.xml", "w").write(newconf.read())
 			else:
-				__logerror("Cannot update config file.")           
+				__logerror("Cannot update config file.")
 	conf = pythonbits_config()
 	conf.set_location(tempdir()+"config.xml")
 	try:
@@ -619,7 +628,7 @@ if __name__ == "__main__":
 			open(tempdir()+"config.xml", "w").write(conf.read())
 		else:
 			__logerror("Cannot update config file.")
-	
+
 	if len(args) != 2:
 		__logerror("Not enough arguments, refer to --help for additional info")
 		exit(1)
@@ -628,7 +637,10 @@ if __name__ == "__main__":
 	results = search(args[0]).results
 	if results:
 		movie = imdb(results[0][1])
-		imgur = Imgur(filename)
+		if conf.strings.has_key("screenshot_num"):
+                        imgur = Imgur(filename, int(conf.strings["screenshot_num"]))
+                else:
+                        imgur = Imgur(filename)
 	else:
 		__logerror("No films found.\n")
 		exit(1)
@@ -644,8 +656,10 @@ if __name__ == "__main__":
 	print movie.overview(False) + "[/quote]"
 	print "[b]Screenshots:[/b]"
 	if imgur.upload():
-		print "[quote][align=center][img=%s]" % imgur.imageurl[0]
-		print "\n[img=%s][/align][/quote]" % imgur.imageurl[1]
+                print "[quote][align=center]"
+                for url in imgur.imageurl:
+		    print "[img=%s]" % url
+                print "[/align][/quote]"
 	if movie.findMediaInfo(filename):
 		print "[mediainfo] %s [/mediainfo]" % movie.mediainfo
 	exit(0)
